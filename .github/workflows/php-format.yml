@@ -21,10 +21,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - name: Set auth for Composer
-        run: composer config http-basic.nova.laravel.com $NOVA_USERNAME $NOVA_PASSWORD
-        env:
-          NOVA_USERNAME: yooska14@gmail.com
-          NOVA_PASSWORD: onedlaravelnova
       - name: Composer install
         if: steps.cache.outputs.cache-hit != 'true'
         run: composer install -n --prefer-dist
