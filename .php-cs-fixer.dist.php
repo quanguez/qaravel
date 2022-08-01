@@ -1,54 +1,54 @@
 <?php
 
-// return PhpCsFixer\Config::create()
-//     ->setRules([
-//         '@PSR2' => true,
-//         'array_syntax' => ['syntax' => 'short'],
-//         'no_unused_imports' => true,
-//         'ordered_imports' => ['sort_algorithm' => 'alpha'],
-//     ]);
+declare(strict_types=1);
 
-$rules = [
-    '@PSR2' => true,
-    'array_syntax' => ['syntax' => 'short'],
-    'no_multiline_whitespace_before_semicolons' => true,
-    'no_short_echo_tag' => true,
-    'no_unused_imports' => true,
-    'not_operator_with_successor_space' => true,
-    'no_useless_else' => true,
-    'ordered_imports' => [
-        'sortAlgorithm' => 'length',
-    ],
-    'phpdoc_add_missing_param_annotation' => true,
-    'phpdoc_indent' => true,
-    'phpdoc_no_package' => true,
-    'phpdoc_order' => true,
-    'phpdoc_separation' => true,
-    'phpdoc_single_line_var_spacing' => true,
-    'phpdoc_trim' => true,
-    'phpdoc_var_without_name' => true,
-    'phpdoc_to_comment' => true,
-    'single_quote' => true,
-    'ternary_operator_spaces' => true,
-    'trailing_comma_in_multiline_array' => true,
-    'trim_array_spaces' => true,
-];
+$header = <<<'EOF'
+    EOF;
 
-$excludes = [
-    'vendor',
-    'storage',
-    'node_modules',
-    'bootstrap/cache',
-];
+$finder = PhpCsFixer\Finder::create()
+    ->ignoreDotFiles(false)
+    ->ignoreVCSIgnored(true)
+    ->exclude('tests/Fixtures')
+    ->in(__DIR__)
+    ->append([
+        __DIR__.'/dev-tools/doc.php',
+        // __DIR__.'/php-cs-fixer', disabled, as we want to be able to run bootstrap file even on lower PHP version, to show nice message
+    ])
+;
 
-return PhpCsFixer\Config::create()
-    ->setRules($rules)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in(__DIR__)
-            ->exclude($excludes)
-            ->notName('README.md')
-            ->notName('*.xml')
-            ->notName('*.yml')
-            ->notName('_ide_helper.php')
-    );
+$config = new PhpCsFixer\Config();
+$config
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@PHP74Migration' => true,
+        '@PHP74Migration:risky' => true,
+        '@PHPUnit75Migration:risky' => true,
+        '@PhpCsFixer' => true,
+        '@PhpCsFixer:risky' => true,
+        'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']], // one should use PHPUnit built-in method instead
+        'header_comment' => ['header' => $header],
+        'heredoc_indentation' => false, // TODO switch on when # of PR's is lower
+        'modernize_strpos' => true, // needs PHP 8+ or polyfill
+        'use_arrow_functions' => false, // TODO switch on when # of PR's is lower
+    ])
+    ->setFinder($finder)
+;
+
+// special handling of fabbot.io service if it's using too old PHP CS Fixer version
+if (false !== getenv('FABBOT_IO')) {
+    try {
+        PhpCsFixer\FixerFactory::create()
+            ->registerBuiltInFixers()
+            ->registerCustomFixers($config->getCustomFixers())
+            ->useRuleSet(new PhpCsFixer\RuleSet($config->getRules()))
+        ;
+    } catch (PhpCsFixer\ConfigurationException\InvalidConfigurationException $e) {
+        $config->setRules([]);
+    } catch (UnexpectedValueException $e) {
+        $config->setRules([]);
+    } catch (InvalidArgumentException $e) {
+        $config->setRules([]);
+    }
+}
+
+return $config;
