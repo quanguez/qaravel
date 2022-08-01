@@ -26,10 +26,7 @@ $config
         '@PhpCsFixer' => true,
         '@PhpCsFixer:risky' => true,
         'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']], // one should use PHPUnit built-in method instead
-<<<<<<< HEAD
         'header_comment' => ['header' => $header],
-=======
->>>>>>> b7203b16eb63c73ff399f1a20bb31bbea51f010f
         'heredoc_indentation' => false, // TODO switch on when # of PR's is lower
         'modernize_strpos' => true, // needs PHP 8+ or polyfill
         'use_arrow_functions' => false, // TODO switch on when # of PR's is lower
