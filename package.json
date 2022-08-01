@@ -7,7 +7,8 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "lint": "eslint . --ext js,jsx,ts,tsx --fix"
     },
     "devDependencies": {
         "axios": "^0.21",
