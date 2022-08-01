@@ -7,12 +7,33 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "lint": "eslint --fix",
+        "pretty": "prettier --write ."
     },
     "devDependencies": {
         "axios": "^0.21",
+        "eslint": "^8.21.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-jsx-a11y": "^6.6.1",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-react": "^7.30.1",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "husky": "^8.0.1",
         "laravel-mix": "^6.0.6",
+        "lint-staged": "^13.0.3",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "prettier": "^2.7.1"
+    },
+    "dependencies": {
+        "react": "^18.2.0"
+    },
+    "lint-staged": {
+        "**/*.{js,jsx}": [
+            "npm run lint",
+            "prettier --write"
+        ]
     }
 }
